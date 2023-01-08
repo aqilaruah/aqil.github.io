@@ -25,6 +25,14 @@
       <div id="main">
         <button id="openNav" class="w3-button w3-xlarge" onclick="w3_open()">&#9776;</button>
         <header class="w3-padding-32" id="home">
+
+            <input type="text" autocomplete="off" class="search-box" placeholder="Search for a city..." />
+            <p id="mytime">Time: None</p>
+            <p id="mydate">Date: None</p>
+            <p id="timezone-name">Timezone Name: None</p>
+            <p id="timezone-location">Timezone Location: None</p>
+            <p id="timezone-abbreviation">Timezone Abbreviation: None</p>
+            
             <h1 class="first">I'm Aqil Aruah.</h1>
             <p>Programmer & Automotive Customise</p>
             <img src="aqilstyle.jpg" alt="myself" class="w3-image" width="992">
@@ -141,6 +149,40 @@
         document.getElementById("main").style.marginLeft = "0%";
         document.getElementById("mySidebar").style.display = "none";
         document.getElementById("openNav").style.display = "inline-block";
+        }
+        const api = {
+            key: "29266089e3264e7d93b91ba8063769d2",
+            base:"https://timezone.abstractapi.com/v1/current_time/?api_key="
+        }
+
+        const searchbox = document.querySelector('.search-box');
+        searchbox.addEventListener('keypress', setQuery);
+
+        function setQuery(evt){
+            if(evt.keyCode == 13){
+                getResults(searchbox.value);
+            }
+        }
+
+        function getResults(query){
+            fetch(`${api.base}${api.key}&location=${query}`)
+            .then(mytimezone => {
+                return mytimezone.json();
+            }).then(displayResults);
+        }
+
+        function displayResults(mytimezone){
+            let get_datetime = mytimezone.datetime;
+            const array_datetime = get_datetime.split(" ");
+            document.getElementById('mytime').innerText = array_datetime[1];
+            document.getElementById('mydate').innerText = array_datetime[0];
+            document.getElementById('timezone-name').innerText = mytimezone.timezone_name;
+            document.getElementById('timezone-location').innerText = mytimezone.timezone_location;
+            document.getElementById('timezone-abbreviation').innerText = mytimezone.timezone_abbreviation;
+
+
+
+
         }
         </script>
 </body>
